@@ -1,0 +1,3302 @@
+{
+  "matchmethod": {
+    "_id": {
+      "$oid": "68df99f783106149bead8289"
+    },
+    "profileId": {
+      "$oid": "68df98cc83106149bead8193"
+    },
+    "datasourceIds": [
+      {
+        "$oid": "68d27dee054c4d4029b800b7"
+      },
+      {
+        "$oid": "68dee3fd83106149bead7b51"
+      }
+    ],
+    "displayFields": [],
+    "createdAt": {
+      "$date": "2025-10-03T09:40:07.241Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-03T09:40:07.241Z"
+    },
+    "__v": 0
+  },
+
+  "matchingrules": [
+    {
+      "_id": {
+        "$oid": "68df99f783106149bead828b"
+      },
+      "matchingMethodId": {
+        "$oid": "68df99f783106149bead8289"
+      },
+      "ruleName": "American express",
+      "descp": "Reconcile the sum Amount with American Express entries in Bank statement and amount of American Express from POS report ",
+      "rules": [
+        [
+          {
+            "type": "aggregate",
+            "dataSourceIds": [
+              "e9b0b93f-8733-4104-8742-d54b53f6f3f11758625269533"
+            ],
+            "fieldId": "amount",
+            "operation": "$sum",
+            "output": {
+              "name": "sum_left",
+              "datatype": "numeric"
+            },
+            "filter": {
+              "field": "vendortype",
+              "value": "American Express"
+            }
+          },
+          {
+            "type": "aggregate",
+            "dataSourceIds": [
+              "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583"
+            ],
+            "fieldId": "amount",
+            "operation": "$sum",
+            "output": {
+              "name": "sum_right",
+              "datatype": "numeric"
+            },
+            "filter": {
+              "field": "vendorType",
+              "value": "AMERICAN EXPRESS"
+            }
+          },
+          {
+            "type": "arithmetic",
+            "dataSourceIds": ["outputs"],
+            "operation": "$subtract",
+            "output": {
+              "name": "difference",
+              "datatype": "numeric"
+            },
+            "leftField": {
+              "type": "ref",
+              "value": "outputs.sum_left"
+            },
+            "rightField": {
+              "type": "ref",
+              "value": "outputs.sum_right"
+            }
+          },
+          {
+            "type": "arithmetic",
+            "dataSourceIds": ["outputs"],
+            "operation": "$equals",
+            "output": {
+              "name": "isReconciled",
+              "datatype": "boolean"
+            },
+            "leftField": {
+              "type": "ref",
+              "value": "outputs.difference"
+            },
+            "rightField": {
+              "type": "static",
+              "value": 0
+            }
+          }
+        ]
+      ],
+      "active": true,
+      "status": "pass",
+      "datasourceIds": [
+        {
+          "$oid": "68d27dee054c4d4029b800b7"
+        },
+        {
+          "$oid": "68dee3fd83106149bead7b51"
+        }
+      ],
+      "order": 0,
+      "outputs": {
+        "fields": []
+      },
+      "profileId": {
+        "$oid": "68df98cc83106149bead8193"
+      },
+      "createdAt": {
+        "$date": "2025-10-03T09:40:07.250Z"
+      },
+      "updatedAt": {
+        "$date": "2025-10-03T09:50:59.233Z"
+      },
+      "__v": 2,
+      "display": {
+        "fields": [
+          {
+            "key": "left_amount",
+            "datatype": {
+              "type": "numeric"
+            },
+            "value": "outputs.sum_left"
+          },
+          {
+            "key": "right_amount",
+            "datatype": {
+              "type": "numeric"
+            },
+            "value": "outputs.sum_right"
+          },
+          {
+            "key": "result",
+            "datatype": {
+              "type": "numeric"
+            },
+            "value": "outputs.difference"
+          },
+          {
+            "key": "reconciliation_status",
+            "datatype": {
+              "type": "boolean",
+              "trueValue": "Reconciled",
+              "falseValue": "Not Reconciled"
+            },
+            "value": "outputs.isReconciled"
+          }
+        ]
+      }
+    },
+    {
+      "_id": {
+        "$oid": "68df9a9f83106149bead82f4"
+      },
+      "matchingMethodId": {
+        "$oid": "68df99f783106149bead8289"
+      },
+      "ruleName": "Mastercard ",
+      "descp": "Reconcile the sum of Amount with mastercard entries in bank statement and amount of Mastercard from POS report ",
+      "rules": [
+        [
+          {
+            "type": "aggregate",
+            "dataSourceIds": [
+              "e9b0b93f-8733-4104-8742-d54b53f6f3f11758625269533"
+            ],
+            "fieldId": "amount",
+            "operation": "$sum",
+            "output": {
+              "name": "sum_left",
+              "datatype": "numeric"
+            },
+            "filter": {
+              "field": "vendortype",
+              "value": "Mastercard",
+              "mode": "contains"
+            }
+          },
+          {
+            "type": "aggregate",
+            "dataSourceIds": [
+              "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583"
+            ],
+            "fieldId": "amount",
+            "operation": "$sum",
+            "output": {
+              "name": "sum_right",
+              "datatype": "numeric"
+            }
+          },
+          {
+            "type": "arithmetic",
+            "dataSourceIds": ["outputs"],
+            "leftField": {
+              "type": "ref",
+              "value": "outputs.sum_left"
+            },
+            "rightField": {
+              "type": "ref",
+              "value": "outputs.sum_right"
+            },
+            "operation": "$subtract",
+            "output": {
+              "name": "difference",
+              "datatype": "numeric"
+            }
+          },
+          {
+            "type": "arithmetic",
+            "dataSourceIds": ["outputs"],
+            "leftField": {
+              "type": "ref",
+              "value": "outputs.difference"
+            },
+            "rightField": {
+              "type": "static",
+              "value": 0
+            },
+            "operation": "$equals",
+            "output": {
+              "name": "isReconciled",
+              "datatype": "boolean"
+            }
+          }
+        ]
+      ],
+      "active": true,
+      "status": "pass",
+      "datasourceIds": [
+        {
+          "$oid": "68d27dee054c4d4029b800b7"
+        },
+        {
+          "$oid": "68dee3fd83106149bead7b51"
+        }
+      ],
+      "order": 0,
+      "outputs": {
+        "fields": []
+      },
+      "profileId": {
+        "$oid": "68df98cc83106149bead8193"
+      },
+      "createdAt": {
+        "$date": "2025-10-03T09:42:55.427Z"
+      },
+      "updatedAt": {
+        "$date": "2025-10-03T09:50:59.249Z"
+      },
+      "__v": 1,
+      "display": {
+        "fields": [
+          {
+            "key": "left_amount",
+            "datatype": {
+              "type": "numeric"
+            },
+            "value": "outputs.sum_left"
+          },
+          {
+            "key": "right_amount",
+            "datatype": {
+              "type": "numeric"
+            },
+            "value": "outputs.sum_right"
+          },
+          {
+            "key": "result",
+            "datatype": {
+              "type": "numeric"
+            },
+            "value": "outputs.difference"
+          },
+          {
+            "key": "reconciliation_status",
+            "datatype": {
+              "type": "boolean",
+              "trueValue": "Reconciled",
+              "falseValue": "Not Reconciled"
+            },
+            "value": "outputs.isReconciled"
+          }
+        ]
+      }
+    }
+  ],
+
+  "Datasources": [
+    {
+      "_id": {
+        "$oid": "68d27dee054c4d4029b800b7"
+      },
+      "name": "Pos Vendor Data",
+      "description": "Pos Data for vendor groups",
+      "source": {
+        "sourceType": "File",
+        "subType": "Unstructured"
+      },
+      "extractionMethodId": {
+        "$oid": "68d27c7d054c4d4029b80019"
+      },
+      "workspaceId": {
+        "$oid": "68ce41a5fd231588ca748ad9"
+      },
+      "extractionStatus": "Success",
+      "organizationId": {
+        "$oid": "68ce411cfd231588ca748abb"
+      },
+      "createdAt": {
+        "$date": "2025-09-23T11:01:02.405Z"
+      },
+      "updatedAt": {
+        "$date": "2025-09-23T11:01:55.015Z"
+      },
+      "__v": 0,
+      "collectionId": "e9b0b93f-8733-4104-8742-d54b53f6f3f11758625269533"
+    },
+    {
+      "_id": {
+        "$oid": "68dee3fd83106149bead7b51"
+      },
+      "name": "Credit Card Details",
+      "description": "CCD",
+      "source": {
+        "sourceType": "File",
+        "subType": "Unstructured"
+      },
+      "extractionMethodId": {
+        "$oid": "68dee19883106149bead7ad4"
+      },
+      "workspaceId": {
+        "$oid": "68ce41a5fd231588ca748ad9"
+      },
+      "extractionStatus": "Success",
+      "organizationId": {
+        "$oid": "68ce411cfd231588ca748abb"
+      },
+      "createdAt": {
+        "$date": "2025-10-02T20:43:41.021Z"
+      },
+      "updatedAt": {
+        "$date": "2025-10-02T20:45:40.414Z"
+      },
+      "__v": 0,
+      "collectionId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583"
+    }
+  ],
+
+  "matchingResult": {
+    "_id": {
+      "$oid": "68df9a1183106149bead82ca"
+    },
+    "matchId": "5914b896-ee8b-45a0-b86e-491ae01037c5",
+    "matchingMethodId": {
+      "$oid": "68df99f783106149bead8289"
+    },
+    "profileId": "68df98cc83106149bead8193",
+    "columns": [
+      {
+        "name": "left_amount",
+        "type": "number",
+        "sourceFields": []
+      },
+      {
+        "name": "right_amount",
+        "type": "number",
+        "sourceFields": []
+      },
+      {
+        "name": "result",
+        "type": "number",
+        "sourceFields": []
+      },
+      {
+        "name": "reconciliation_status",
+        "type": "boolean",
+        "sourceFields": []
+      }
+    ],
+    "rows": [
+      {
+        "cells": [
+          {
+            "value": 571.96,
+            "matchType": "exact",
+            "sources": [
+              {
+                "tableId": "e9b0b93f-8733-4104-8742-d54b53f6f3f11758625269533",
+                "rowIndex": 9,
+                "colIndex": 3,
+                "originalValue": 571.96,
+                "documentId": "Pos Vendor Data",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68d27e22054c4d4029b80110"
+                  },
+                  "date": "2024-12-29",
+                  "vendortype": "American Express",
+                  "amount": 571.96,
+                  "sourceType": "document",
+                  "sourceId": "fa306a0e921a600782f2dd1793af3afc7002a05f6bad67754686560b966edbb2"
+                }
+              }
+            ]
+          },
+          {
+            "value": 5614.25,
+            "matchType": "aggregated",
+            "sources": [
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 0,
+                "colIndex": 3,
+                "originalValue": "85.37",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7baf"
+                  },
+                  "date": "11/4/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "85.37",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 1,
+                "colIndex": 3,
+                "originalValue": "72.06",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bad"
+                  },
+                  "date": "11/4/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "72.06",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 2,
+                "colIndex": 3,
+                "originalValue": "80.45",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bae"
+                  },
+                  "date": "11/4/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "80.45",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 3,
+                "colIndex": 3,
+                "originalValue": "-93.57",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bb0"
+                  },
+                  "date": "11/5/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "-93.57",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 4,
+                "colIndex": 3,
+                "originalValue": "73.31",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bac"
+                  },
+                  "date": "11/1/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "73.31",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 5,
+                "colIndex": 3,
+                "originalValue": "124.08",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bb1"
+                  },
+                  "date": "11/5/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "124.08",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 6,
+                "colIndex": 3,
+                "originalValue": "156.17",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bb5"
+                  },
+                  "date": "11/12/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "156.17",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 7,
+                "colIndex": 3,
+                "originalValue": "93.22",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bb2"
+                  },
+                  "date": "11/6/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "93.22",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 8,
+                "colIndex": 3,
+                "originalValue": "92.88",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bb4"
+                  },
+                  "date": "11/8/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "92.88",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 9,
+                "colIndex": 3,
+                "originalValue": "139.57",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bb6"
+                  },
+                  "date": "11/12/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "139.57",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 10,
+                "colIndex": 3,
+                "originalValue": "99.42",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bb3"
+                  },
+                  "date": "11/7/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "99.42",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 11,
+                "colIndex": 3,
+                "originalValue": "189.43",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bb7"
+                  },
+                  "date": "11/12/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "189.43",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 12,
+                "colIndex": 3,
+                "originalValue": "77.19",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bbf"
+                  },
+                  "date": "11/19/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "77.19",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 13,
+                "colIndex": 3,
+                "originalValue": "127.25",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bc0"
+                  },
+                  "date": "11/20/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "127.25",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 14,
+                "colIndex": 3,
+                "originalValue": "96.18",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bbe"
+                  },
+                  "date": "11/18/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "96.18",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 15,
+                "colIndex": 3,
+                "originalValue": "74.59",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bc9"
+                  },
+                  "date": "11/29/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "74.59",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 16,
+                "colIndex": 3,
+                "originalValue": "42.96",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bc7"
+                  },
+                  "date": "11/27/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "42.96",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 17,
+                "colIndex": 3,
+                "originalValue": "150.65",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bb8"
+                  },
+                  "date": "11/12/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "150.65",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 18,
+                "colIndex": 3,
+                "originalValue": "50.07",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bcd"
+                  },
+                  "date": "12/3/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "50.07",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 19,
+                "colIndex": 3,
+                "originalValue": "66.23",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bce"
+                  },
+                  "date": "12/4/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "66.23",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 20,
+                "colIndex": 3,
+                "originalValue": "30.33",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bc8"
+                  },
+                  "date": "11/29/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "30.33",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 21,
+                "colIndex": 3,
+                "originalValue": "234.70",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bbd"
+                  },
+                  "date": "11/18/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "234.70",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 22,
+                "colIndex": 3,
+                "originalValue": "77.27",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bcc"
+                  },
+                  "date": "12/2/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "77.27",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 23,
+                "colIndex": 3,
+                "originalValue": "-82.87",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bcf"
+                  },
+                  "date": "12/5/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "-82.87",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 24,
+                "colIndex": 3,
+                "originalValue": "157.33",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bc5"
+                  },
+                  "date": "11/25/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "157.33",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 25,
+                "colIndex": 3,
+                "originalValue": "93.37",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bbc"
+                  },
+                  "date": "11/18/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "93.37",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 26,
+                "colIndex": 3,
+                "originalValue": "91.11",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bca"
+                  },
+                  "date": "12/2/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "91.11",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 27,
+                "colIndex": 3,
+                "originalValue": "125.38",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bcb"
+                  },
+                  "date": "12/2/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "125.38",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 28,
+                "colIndex": 3,
+                "originalValue": "145.75",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bd0"
+                  },
+                  "date": "12/5/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "145.75",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 29,
+                "colIndex": 3,
+                "originalValue": "100.31",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bbb"
+                  },
+                  "date": "11/15/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "100.31",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 30,
+                "colIndex": 3,
+                "originalValue": "86.03",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bba"
+                  },
+                  "date": "11/14/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "86.03",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 31,
+                "colIndex": 3,
+                "originalValue": "83.68",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bc6"
+                  },
+                  "date": "11/26/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "83.68",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 32,
+                "colIndex": 3,
+                "originalValue": "26.07",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bc1"
+                  },
+                  "date": "11/21/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "26.07",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 33,
+                "colIndex": 3,
+                "originalValue": "100.10",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bc4"
+                  },
+                  "date": "11/25/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "100.10",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 34,
+                "colIndex": 3,
+                "originalValue": "123.31",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bc2"
+                  },
+                  "date": "11/22/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "123.31",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 35,
+                "colIndex": 3,
+                "originalValue": "84.91",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bd3"
+                  },
+                  "date": "12/9/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "84.91",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 36,
+                "colIndex": 3,
+                "originalValue": "107.48",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bc3"
+                  },
+                  "date": "11/25/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "107.48",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 37,
+                "colIndex": 3,
+                "originalValue": "50.20",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bb9"
+                  },
+                  "date": "11/13/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "50.20",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 38,
+                "colIndex": 3,
+                "originalValue": "71.98",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bd4"
+                  },
+                  "date": "12/9/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "71.98",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 39,
+                "colIndex": 3,
+                "originalValue": "93.76",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bd5"
+                  },
+                  "date": "12/10/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "93.76",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 40,
+                "colIndex": 3,
+                "originalValue": "172.52",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bd6"
+                  },
+                  "date": "12/11/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "172.52",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 41,
+                "colIndex": 3,
+                "originalValue": "48.29",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bd7"
+                  },
+                  "date": "12/12/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "48.29",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 42,
+                "colIndex": 3,
+                "originalValue": "153.71",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bda"
+                  },
+                  "date": "12/16/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "153.71",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 43,
+                "colIndex": 3,
+                "originalValue": "80.28",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bd8"
+                  },
+                  "date": "12/13/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "80.28",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 44,
+                "colIndex": 3,
+                "originalValue": "81.22",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bdb"
+                  },
+                  "date": "12/16/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "81.22",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 45,
+                "colIndex": 3,
+                "originalValue": "131.16",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bd9"
+                  },
+                  "date": "12/16/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "131.16",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 46,
+                "colIndex": 3,
+                "originalValue": "142.08",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bdc"
+                  },
+                  "date": "12/17/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "142.08",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 47,
+                "colIndex": 3,
+                "originalValue": "90.84",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bde"
+                  },
+                  "date": "12/19/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "90.84",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 48,
+                "colIndex": 3,
+                "originalValue": "100.51",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bdd"
+                  },
+                  "date": "12/18/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "100.51",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 49,
+                "colIndex": 3,
+                "originalValue": "61.21",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bdf"
+                  },
+                  "date": "12/20/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "61.21",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 50,
+                "colIndex": 3,
+                "originalValue": "181.79",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7be0"
+                  },
+                  "date": "12/23/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "181.79",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 51,
+                "colIndex": 3,
+                "originalValue": "68.08",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7be2"
+                  },
+                  "date": "12/23/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "68.08",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 52,
+                "colIndex": 3,
+                "originalValue": "52.67",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7be1"
+                  },
+                  "date": "12/23/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "52.67",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 53,
+                "colIndex": 3,
+                "originalValue": "36.82",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7be6"
+                  },
+                  "date": "12/27/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "36.82",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 54,
+                "colIndex": 3,
+                "originalValue": "78.63",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7be3"
+                  },
+                  "date": "12/24/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "78.63",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 55,
+                "colIndex": 3,
+                "originalValue": "32.05",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7be5"
+                  },
+                  "date": "12/26/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "32.05",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 56,
+                "colIndex": 3,
+                "originalValue": "25.11",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7be4"
+                  },
+                  "date": "12/26/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "25.11",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 57,
+                "colIndex": 3,
+                "originalValue": "39.87",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7be7"
+                  },
+                  "date": "12/30/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "39.87",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 58,
+                "colIndex": 3,
+                "originalValue": "100.86",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7be9"
+                  },
+                  "date": "12/30/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "100.86",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 59,
+                "colIndex": 3,
+                "originalValue": "51.82",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7be8"
+                  },
+                  "date": "12/30/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "51.82",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 60,
+                "colIndex": 3,
+                "originalValue": "51.91",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bea"
+                  },
+                  "date": "12/31/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "51.91",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 61,
+                "colIndex": 3,
+                "originalValue": "106.72",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bd1"
+                  },
+                  "date": "12/6/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "106.72",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 62,
+                "colIndex": 3,
+                "originalValue": "128.39",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bd2"
+                  },
+                  "date": "12/9/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "128.39",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              }
+            ]
+          },
+          {
+            "value": -5042.29,
+            "matchType": "computed"
+          },
+          {
+            "value": "Not Reconciled",
+            "matchType": "none",
+            "metaData": {
+              "severity": "high",
+              "details": "Data not reconciled due to data mismatch",
+              "type": "data_mismatch"
+            }
+          }
+        ],
+        "sourceRows": [
+          {
+            "tableId": "e9b0b93f-8733-4104-8742-d54b53f6f3f11758625269533",
+            "rowIndex": 9
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 0
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 1
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 2
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 3
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 4
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 5
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 6
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 7
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 8
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 9
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 10
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 11
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 12
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 13
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 14
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 15
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 16
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 17
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 18
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 19
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 20
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 21
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 22
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 23
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 24
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 25
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 26
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 27
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 28
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 29
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 30
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 31
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 32
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 33
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 34
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 35
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 36
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 37
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 38
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 39
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 40
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 41
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 42
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 43
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 44
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 45
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 46
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 47
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 48
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 49
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 50
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 51
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 52
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 53
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 54
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 55
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 56
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 57
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 58
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 59
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 60
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 61
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 62
+          }
+        ],
+        "matchingRules": ["American express"]
+      },
+      {
+        "cells": [
+          {
+            "value": 3373.6899999999996,
+            "matchType": "aggregated",
+            "sources": [
+              {
+                "tableId": "e9b0b93f-8733-4104-8742-d54b53f6f3f11758625269533",
+                "rowIndex": 3,
+                "colIndex": 3,
+                "originalValue": 3361.99,
+                "documentId": "Pos Vendor Data",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68d27e22054c4d4029b8010d"
+                  },
+                  "date": "2024-12-29",
+                  "vendortype": "Mastercard",
+                  "amount": 3361.99,
+                  "sourceType": "document",
+                  "sourceId": "fa306a0e921a600782f2dd1793af3afc7002a05f6bad67754686560b966edbb2"
+                }
+              },
+              {
+                "tableId": "e9b0b93f-8733-4104-8742-d54b53f6f3f11758625269533",
+                "rowIndex": 4,
+                "colIndex": 3,
+                "originalValue": 11.7,
+                "documentId": "Pos Vendor Data",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68d27e22054c4d4029b80115"
+                  },
+                  "date": "2024-12-29",
+                  "vendortype": "Mastercard - Kiosk",
+                  "amount": 11.7,
+                  "sourceType": "document",
+                  "sourceId": "fa306a0e921a600782f2dd1793af3afc7002a05f6bad67754686560b966edbb2"
+                }
+              }
+            ]
+          },
+          {
+            "value": 5614.25,
+            "matchType": "aggregated",
+            "sources": [
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 0,
+                "colIndex": 3,
+                "originalValue": "85.37",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7baf"
+                  },
+                  "date": "11/4/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "85.37",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 1,
+                "colIndex": 3,
+                "originalValue": "72.06",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bad"
+                  },
+                  "date": "11/4/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "72.06",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 2,
+                "colIndex": 3,
+                "originalValue": "80.45",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bae"
+                  },
+                  "date": "11/4/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "80.45",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 3,
+                "colIndex": 3,
+                "originalValue": "-93.57",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bb0"
+                  },
+                  "date": "11/5/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "-93.57",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 4,
+                "colIndex": 3,
+                "originalValue": "73.31",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bac"
+                  },
+                  "date": "11/1/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "73.31",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 5,
+                "colIndex": 3,
+                "originalValue": "124.08",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bb1"
+                  },
+                  "date": "11/5/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "124.08",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 6,
+                "colIndex": 3,
+                "originalValue": "156.17",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bb5"
+                  },
+                  "date": "11/12/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "156.17",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 7,
+                "colIndex": 3,
+                "originalValue": "93.22",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bb2"
+                  },
+                  "date": "11/6/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "93.22",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 8,
+                "colIndex": 3,
+                "originalValue": "92.88",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bb4"
+                  },
+                  "date": "11/8/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "92.88",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 9,
+                "colIndex": 3,
+                "originalValue": "139.57",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bb6"
+                  },
+                  "date": "11/12/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "139.57",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 10,
+                "colIndex": 3,
+                "originalValue": "99.42",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bb3"
+                  },
+                  "date": "11/7/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "99.42",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 11,
+                "colIndex": 3,
+                "originalValue": "189.43",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bb7"
+                  },
+                  "date": "11/12/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "189.43",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 12,
+                "colIndex": 3,
+                "originalValue": "77.19",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bbf"
+                  },
+                  "date": "11/19/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "77.19",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 13,
+                "colIndex": 3,
+                "originalValue": "127.25",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bc0"
+                  },
+                  "date": "11/20/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "127.25",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 14,
+                "colIndex": 3,
+                "originalValue": "96.18",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bbe"
+                  },
+                  "date": "11/18/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "96.18",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 15,
+                "colIndex": 3,
+                "originalValue": "74.59",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bc9"
+                  },
+                  "date": "11/29/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "74.59",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 16,
+                "colIndex": 3,
+                "originalValue": "42.96",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bc7"
+                  },
+                  "date": "11/27/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "42.96",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 17,
+                "colIndex": 3,
+                "originalValue": "150.65",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bb8"
+                  },
+                  "date": "11/12/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "150.65",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 18,
+                "colIndex": 3,
+                "originalValue": "50.07",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bcd"
+                  },
+                  "date": "12/3/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "50.07",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 19,
+                "colIndex": 3,
+                "originalValue": "66.23",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bce"
+                  },
+                  "date": "12/4/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "66.23",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 20,
+                "colIndex": 3,
+                "originalValue": "30.33",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bc8"
+                  },
+                  "date": "11/29/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "30.33",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 21,
+                "colIndex": 3,
+                "originalValue": "234.70",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bbd"
+                  },
+                  "date": "11/18/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "234.70",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 22,
+                "colIndex": 3,
+                "originalValue": "77.27",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bcc"
+                  },
+                  "date": "12/2/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "77.27",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 23,
+                "colIndex": 3,
+                "originalValue": "-82.87",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bcf"
+                  },
+                  "date": "12/5/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "-82.87",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 24,
+                "colIndex": 3,
+                "originalValue": "157.33",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bc5"
+                  },
+                  "date": "11/25/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "157.33",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 25,
+                "colIndex": 3,
+                "originalValue": "93.37",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bbc"
+                  },
+                  "date": "11/18/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "93.37",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 26,
+                "colIndex": 3,
+                "originalValue": "91.11",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bca"
+                  },
+                  "date": "12/2/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "91.11",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 27,
+                "colIndex": 3,
+                "originalValue": "125.38",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bcb"
+                  },
+                  "date": "12/2/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "125.38",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 28,
+                "colIndex": 3,
+                "originalValue": "145.75",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bd0"
+                  },
+                  "date": "12/5/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "145.75",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 29,
+                "colIndex": 3,
+                "originalValue": "100.31",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bbb"
+                  },
+                  "date": "11/15/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "100.31",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 30,
+                "colIndex": 3,
+                "originalValue": "86.03",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bba"
+                  },
+                  "date": "11/14/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "86.03",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 31,
+                "colIndex": 3,
+                "originalValue": "83.68",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bc6"
+                  },
+                  "date": "11/26/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "83.68",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 32,
+                "colIndex": 3,
+                "originalValue": "26.07",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bc1"
+                  },
+                  "date": "11/21/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "26.07",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 33,
+                "colIndex": 3,
+                "originalValue": "100.10",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bc4"
+                  },
+                  "date": "11/25/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "100.10",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 34,
+                "colIndex": 3,
+                "originalValue": "123.31",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bc2"
+                  },
+                  "date": "11/22/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "123.31",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 35,
+                "colIndex": 3,
+                "originalValue": "84.91",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bd3"
+                  },
+                  "date": "12/9/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "84.91",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 36,
+                "colIndex": 3,
+                "originalValue": "107.48",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bc3"
+                  },
+                  "date": "11/25/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "107.48",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 37,
+                "colIndex": 3,
+                "originalValue": "50.20",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bb9"
+                  },
+                  "date": "11/13/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "50.20",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 38,
+                "colIndex": 3,
+                "originalValue": "71.98",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bd4"
+                  },
+                  "date": "12/9/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "71.98",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 39,
+                "colIndex": 3,
+                "originalValue": "93.76",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bd5"
+                  },
+                  "date": "12/10/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "93.76",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 40,
+                "colIndex": 3,
+                "originalValue": "172.52",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bd6"
+                  },
+                  "date": "12/11/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "172.52",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 41,
+                "colIndex": 3,
+                "originalValue": "48.29",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bd7"
+                  },
+                  "date": "12/12/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "48.29",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 42,
+                "colIndex": 3,
+                "originalValue": "153.71",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bda"
+                  },
+                  "date": "12/16/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "153.71",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 43,
+                "colIndex": 3,
+                "originalValue": "80.28",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bd8"
+                  },
+                  "date": "12/13/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "80.28",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 44,
+                "colIndex": 3,
+                "originalValue": "81.22",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bdb"
+                  },
+                  "date": "12/16/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "81.22",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 45,
+                "colIndex": 3,
+                "originalValue": "131.16",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bd9"
+                  },
+                  "date": "12/16/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "131.16",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 46,
+                "colIndex": 3,
+                "originalValue": "142.08",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bdc"
+                  },
+                  "date": "12/17/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "142.08",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 47,
+                "colIndex": 3,
+                "originalValue": "90.84",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bde"
+                  },
+                  "date": "12/19/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "90.84",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 48,
+                "colIndex": 3,
+                "originalValue": "100.51",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bdd"
+                  },
+                  "date": "12/18/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "100.51",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 49,
+                "colIndex": 3,
+                "originalValue": "61.21",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bdf"
+                  },
+                  "date": "12/20/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "61.21",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 50,
+                "colIndex": 3,
+                "originalValue": "181.79",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7be0"
+                  },
+                  "date": "12/23/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "181.79",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 51,
+                "colIndex": 3,
+                "originalValue": "68.08",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7be2"
+                  },
+                  "date": "12/23/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "68.08",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 52,
+                "colIndex": 3,
+                "originalValue": "52.67",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7be1"
+                  },
+                  "date": "12/23/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "52.67",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 53,
+                "colIndex": 3,
+                "originalValue": "36.82",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7be6"
+                  },
+                  "date": "12/27/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "36.82",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 54,
+                "colIndex": 3,
+                "originalValue": "78.63",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7be3"
+                  },
+                  "date": "12/24/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "78.63",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 55,
+                "colIndex": 3,
+                "originalValue": "32.05",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7be5"
+                  },
+                  "date": "12/26/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "32.05",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 56,
+                "colIndex": 3,
+                "originalValue": "25.11",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7be4"
+                  },
+                  "date": "12/26/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "25.11",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 57,
+                "colIndex": 3,
+                "originalValue": "39.87",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7be7"
+                  },
+                  "date": "12/30/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "39.87",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 58,
+                "colIndex": 3,
+                "originalValue": "100.86",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7be9"
+                  },
+                  "date": "12/30/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "100.86",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 59,
+                "colIndex": 3,
+                "originalValue": "51.82",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7be8"
+                  },
+                  "date": "12/30/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "51.82",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 60,
+                "colIndex": 3,
+                "originalValue": "51.91",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bea"
+                  },
+                  "date": "12/31/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "51.91",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 61,
+                "colIndex": 3,
+                "originalValue": "106.72",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bd1"
+                  },
+                  "date": "12/6/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "106.72",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              },
+              {
+                "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+                "rowIndex": 62,
+                "colIndex": 3,
+                "originalValue": "128.39",
+                "documentId": "Credit Card Details",
+                "fullRow": {
+                  "_id": {
+                    "$oid": "68dee47483106149bead7bd2"
+                  },
+                  "date": "12/9/2024",
+                  "vendorType": "AMERICAN EXPRESS",
+                  "amount": "128.39",
+                  "sourceType": "document",
+                  "sourceId": "aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2"
+                }
+              }
+            ]
+          },
+          {
+            "value": -2240.5600000000004,
+            "matchType": "computed"
+          },
+          {
+            "value": "Not Reconciled",
+            "matchType": "none",
+            "metaData": {
+              "severity": "high",
+              "details": "Data not reconciled due to data mismatch",
+              "type": "data_mismatch"
+            }
+          }
+        ],
+        "sourceRows": [
+          {
+            "tableId": "e9b0b93f-8733-4104-8742-d54b53f6f3f11758625269533",
+            "rowIndex": 3
+          },
+          {
+            "tableId": "e9b0b93f-8733-4104-8742-d54b53f6f3f11758625269533",
+            "rowIndex": 4
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 0
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 1
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 2
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 3
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 4
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 5
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 6
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 7
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 8
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 9
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 10
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 11
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 12
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 13
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 14
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 15
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 16
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 17
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 18
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 19
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 20
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 21
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 22
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 23
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 24
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 25
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 26
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 27
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 28
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 29
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 30
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 31
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 32
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 33
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 34
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 35
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 36
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 37
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 38
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 39
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 40
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 41
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 42
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 43
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 44
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 45
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 46
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 47
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 48
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 49
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 50
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 51
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 52
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 53
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 54
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 55
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 56
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 57
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 58
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 59
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 60
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 61
+          },
+          {
+            "tableId": "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583",
+            "rowIndex": 62
+          }
+        ],
+        "matchingRules": ["Mastercard "]
+      }
+    ],
+    "sources": [
+      "e9b0b93f-8733-4104-8742-d54b53f6f3f11758625269533",
+      "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583"
+    ],
+    "metadata": {
+      "matchSummary": {
+        "totalMatches": 2,
+        "totalDiscrepancies": 0,
+        "aggregationApplied": true
+      },
+      "documentIds": ["Pos Vendor Data", "Credit Card Details"],
+      "fieldsUsed": [
+        "e9b0b93f-8733-4104-8742-d54b53f6f3f11758625269533.amount",
+        "0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583.amount"
+      ]
+    },
+    "createdAt": {
+      "$date": "2025-10-03T09:40:33.797Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-03T09:50:59.299Z"
+    },
+    "__v": 0
+  },
+
+  "discrepancies": [
+    {
+      "_id": {
+        "$oid": "68df9a2183106149bead82d4"
+      },
+      "type": "data_mismatch",
+      "details": "Data not reconciled due to data mismatch",
+      "severity": "high",
+      "suggestedResolution": {
+        "aiSummary": "A card settlement transaction with ID '2024-03-22-ch_3P1C4lFhRbtS...' was recorded in the bank statement, but the corresponding sale is missing from the Point of Sale (POS) data. This indicates a potential unrecorded sale or a system error.",
+        "smartFacts": ["Unmatched Bank Transaction"],
+        "_id": {
+          "$oid": "68df9c921d44430d0e835bc1"
+        }
+      },
+      "collection": "[{\"value\":571.96,\"matchType\":\"exact\",\"sources\":[{\"tableId\":\"e9b0b93f-8733-4104-8742-d54b53f6f3f11758625269533\",\"rowIndex\":9,\"colIndex\":3,\"originalValue\":571.96,\"documentId\":\"Pos Vendor Data\",\"fullRow\":{\"_id\":\"68d27e22054c4d4029b80110\",\"date\":\"2024-12-29\",\"vendortype\":\"American Express\",\"amount\":571.96,\"sourceType\":\"document\",\"sourceId\":\"fa306a0e921a600782f2dd1793af3afc7002a05f6bad67754686560b966edbb2\"}}]},{\"value\":5614.25,\"matchType\":\"aggregated\",\"sources\":[{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":0,\"colIndex\":3,\"originalValue\":\"85.37\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7baf\",\"date\":\"11/4/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"85.37\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":1,\"colIndex\":3,\"originalValue\":\"72.06\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bad\",\"date\":\"11/4/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"72.06\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":2,\"colIndex\":3,\"originalValue\":\"80.45\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bae\",\"date\":\"11/4/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"80.45\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":3,\"colIndex\":3,\"originalValue\":\"-93.57\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bb0\",\"date\":\"11/5/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"-93.57\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":4,\"colIndex\":3,\"originalValue\":\"73.31\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bac\",\"date\":\"11/1/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"73.31\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":5,\"colIndex\":3,\"originalValue\":\"124.08\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bb1\",\"date\":\"11/5/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"124.08\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":6,\"colIndex\":3,\"originalValue\":\"156.17\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bb5\",\"date\":\"11/12/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"156.17\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":7,\"colIndex\":3,\"originalValue\":\"93.22\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bb2\",\"date\":\"11/6/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"93.22\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":8,\"colIndex\":3,\"originalValue\":\"92.88\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bb4\",\"date\":\"11/8/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"92.88\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":9,\"colIndex\":3,\"originalValue\":\"139.57\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bb6\",\"date\":\"11/12/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"139.57\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":10,\"colIndex\":3,\"originalValue\":\"99.42\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bb3\",\"date\":\"11/7/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"99.42\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":11,\"colIndex\":3,\"originalValue\":\"189.43\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bb7\",\"date\":\"11/12/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"189.43\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":12,\"colIndex\":3,\"originalValue\":\"77.19\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bbf\",\"date\":\"11/19/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"77.19\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":13,\"colIndex\":3,\"originalValue\":\"127.25\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bc0\",\"date\":\"11/20/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"127.25\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":14,\"colIndex\":3,\"originalValue\":\"96.18\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bbe\",\"date\":\"11/18/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"96.18\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":15,\"colIndex\":3,\"originalValue\":\"74.59\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bc9\",\"date\":\"11/29/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"74.59\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":16,\"colIndex\":3,\"originalValue\":\"42.96\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bc7\",\"date\":\"11/27/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"42.96\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":17,\"colIndex\":3,\"originalValue\":\"150.65\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bb8\",\"date\":\"11/12/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"150.65\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":18,\"colIndex\":3,\"originalValue\":\"50.07\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bcd\",\"date\":\"12/3/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"50.07\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":19,\"colIndex\":3,\"originalValue\":\"66.23\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bce\",\"date\":\"12/4/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"66.23\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":20,\"colIndex\":3,\"originalValue\":\"30.33\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bc8\",\"date\":\"11/29/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"30.33\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":21,\"colIndex\":3,\"originalValue\":\"234.70\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bbd\",\"date\":\"11/18/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"234.70\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":22,\"colIndex\":3,\"originalValue\":\"77.27\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bcc\",\"date\":\"12/2/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"77.27\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":23,\"colIndex\":3,\"originalValue\":\"-82.87\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bcf\",\"date\":\"12/5/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"-82.87\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":24,\"colIndex\":3,\"originalValue\":\"157.33\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bc5\",\"date\":\"11/25/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"157.33\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":25,\"colIndex\":3,\"originalValue\":\"93.37\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bbc\",\"date\":\"11/18/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"93.37\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":26,\"colIndex\":3,\"originalValue\":\"91.11\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bca\",\"date\":\"12/2/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"91.11\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":27,\"colIndex\":3,\"originalValue\":\"125.38\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bcb\",\"date\":\"12/2/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"125.38\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":28,\"colIndex\":3,\"originalValue\":\"145.75\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bd0\",\"date\":\"12/5/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"145.75\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":29,\"colIndex\":3,\"originalValue\":\"100.31\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bbb\",\"date\":\"11/15/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"100.31\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":30,\"colIndex\":3,\"originalValue\":\"86.03\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bba\",\"date\":\"11/14/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"86.03\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":31,\"colIndex\":3,\"originalValue\":\"83.68\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bc6\",\"date\":\"11/26/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"83.68\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":32,\"colIndex\":3,\"originalValue\":\"26.07\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bc1\",\"date\":\"11/21/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"26.07\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":33,\"colIndex\":3,\"originalValue\":\"100.10\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bc4\",\"date\":\"11/25/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"100.10\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":34,\"colIndex\":3,\"originalValue\":\"123.31\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bc2\",\"date\":\"11/22/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"123.31\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":35,\"colIndex\":3,\"originalValue\":\"84.91\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bd3\",\"date\":\"12/9/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"84.91\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":36,\"colIndex\":3,\"originalValue\":\"107.48\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bc3\",\"date\":\"11/25/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"107.48\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":37,\"colIndex\":3,\"originalValue\":\"50.20\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bb9\",\"date\":\"11/13/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"50.20\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":38,\"colIndex\":3,\"originalValue\":\"71.98\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bd4\",\"date\":\"12/9/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"71.98\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":39,\"colIndex\":3,\"originalValue\":\"93.76\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bd5\",\"date\":\"12/10/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"93.76\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":40,\"colIndex\":3,\"originalValue\":\"172.52\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bd6\",\"date\":\"12/11/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"172.52\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":41,\"colIndex\":3,\"originalValue\":\"48.29\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bd7\",\"date\":\"12/12/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"48.29\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":42,\"colIndex\":3,\"originalValue\":\"153.71\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bda\",\"date\":\"12/16/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"153.71\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":43,\"colIndex\":3,\"originalValue\":\"80.28\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bd8\",\"date\":\"12/13/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"80.28\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":44,\"colIndex\":3,\"originalValue\":\"81.22\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bdb\",\"date\":\"12/16/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"81.22\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":45,\"colIndex\":3,\"originalValue\":\"131.16\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bd9\",\"date\":\"12/16/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"131.16\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":46,\"colIndex\":3,\"originalValue\":\"142.08\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bdc\",\"date\":\"12/17/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"142.08\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":47,\"colIndex\":3,\"originalValue\":\"90.84\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bde\",\"date\":\"12/19/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"90.84\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":48,\"colIndex\":3,\"originalValue\":\"100.51\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bdd\",\"date\":\"12/18/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"100.51\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":49,\"colIndex\":3,\"originalValue\":\"61.21\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bdf\",\"date\":\"12/20/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"61.21\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":50,\"colIndex\":3,\"originalValue\":\"181.79\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7be0\",\"date\":\"12/23/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"181.79\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":51,\"colIndex\":3,\"originalValue\":\"68.08\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7be2\",\"date\":\"12/23/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"68.08\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":52,\"colIndex\":3,\"originalValue\":\"52.67\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7be1\",\"date\":\"12/23/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"52.67\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":53,\"colIndex\":3,\"originalValue\":\"36.82\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7be6\",\"date\":\"12/27/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"36.82\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":54,\"colIndex\":3,\"originalValue\":\"78.63\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7be3\",\"date\":\"12/24/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"78.63\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":55,\"colIndex\":3,\"originalValue\":\"32.05\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7be5\",\"date\":\"12/26/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"32.05\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":56,\"colIndex\":3,\"originalValue\":\"25.11\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7be4\",\"date\":\"12/26/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"25.11\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":57,\"colIndex\":3,\"originalValue\":\"39.87\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7be7\",\"date\":\"12/30/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"39.87\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":58,\"colIndex\":3,\"originalValue\":\"100.86\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7be9\",\"date\":\"12/30/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"100.86\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":59,\"colIndex\":3,\"originalValue\":\"51.82\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7be8\",\"date\":\"12/30/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"51.82\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":60,\"colIndex\":3,\"originalValue\":\"51.91\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bea\",\"date\":\"12/31/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"51.91\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":61,\"colIndex\":3,\"originalValue\":\"106.72\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bd1\",\"date\":\"12/6/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"106.72\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}},{\"tableId\":\"0de75acb-91bb-4abb-9fd1-b9868cfd9ed71759437830583\",\"rowIndex\":62,\"colIndex\":3,\"originalValue\":\"128.39\",\"documentId\":\"Credit Card Details\",\"fullRow\":{\"_id\":\"68dee47483106149bead7bd2\",\"date\":\"12/9/2024\",\"vendorType\":\"AMERICAN EXPRESS\",\"amount\":\"128.39\",\"sourceType\":\"document\",\"sourceId\":\"aee5659451c4c6d1a5b27d8f2e0db15f0fbb7dc22576a346700515ce1ae253f2\"}}]}]",
+      "matchedRowIndex": 0,
+      "matchResultsId": {
+        "$oid": "68df9a1183106149bead82ca"
+      },
+      "profileId": {
+        "$oid": "68df98cc83106149bead8193"
+      },
+      "workspaceId": {
+        "$oid": "68ce41a5fd231588ca748ad9"
+      },
+      "organizationId": {
+        "$oid": "68ce411cfd231588ca748abb"
+      },
+      "createdAt": {
+        "$date": "2025-10-03T09:40:49.585Z"
+      },
+      "updatedAt": {
+        "$date": "2025-10-03T09:51:14.282Z"
+      },
+      "__v": 0
+    }
+  ],
+
+  "discrepancyResolution": {
+    "_id": {
+      "$oid": "68df9af9688adbb7d52e55e5"
+    },
+    "discrepancyId": {
+      "$oid": "68df97fb688adbb7d52e55cb"
+    },
+    "ticketId": {
+      "$oid": "68df9a44688adbb7d52e55d4"
+    },
+    "resolvedBy": {
+      "$oid": "68ce432efd231588ca748b3f"
+    },
+    "resolvedAt": {
+      "$date": "2025-10-03T09:44:25.459Z"
+    },
+    "status": "Approved",
+    "resolvedCollection": "[{\"value\":925,\"matchType\":\"aggregated\",\"sources\":[{\"tableId\":\"f502ecad-34b2-493f-976d-502910105d7a1759147182466\",\"rowIndex\":0,\"colIndex\":4,\"originalValue\":300,\"documentId\":\"Amit bhai POS\",\"fullRow\":{\"_id\":\"68da74c4d59477d0df0bd2ba\",\"transactionId\":\"POS004\",\"date\":\"2025-09-23\",\"description\":\"Sale - Item D\",\"amount\":300,\"status\":\"Completed\",\"sourceType\":\"document\",\"sourceId\":\"281f211144b67353751aaf8c98f5ae4fafe001ea620f43485979d98cb334f6b9\"}},{\"tableId\":\"f502ecad-34b2-493f-976d-502910105d7a1759147182466\",\"rowIndex\":1,\"colIndex\":4,\"originalValue\":150,\"documentId\":\"Amit bhai POS\",\"fullRow\":{\"_id\":\"68da74c4d59477d0df0bd2bb\",\"transactionId\":\"POS005\",\"date\":\"2025-09-24\",\"description\":\"Sale - Item E\",\"amount\":150,\"status\":\"Completed\",\"sourceType\":\"document\",\"sourceId\":\"281f211144b67353751aaf8c98f5ae4fafe001ea620f43485979d98cb334f6b9\"}},{\"tableId\":\"f502ecad-34b2-493f-976d-502910105d7a1759147182466\",\"rowIndex\":2,\"colIndex\":4,\"originalValue\":250,\"documentId\":\"Amit bhai POS\",\"fullRow\":{\"_id\":\"68da74c4d59477d0df0bd2b8\",\"transactionId\":\"POS002\",\"date\":\"2025-09-21\",\"description\":\"Sale - Item B\",\"amount\":250,\"status\":\"Completed\",\"sourceType\":\"document\",\"sourceId\":\"281f211144b67353751aaf8c98f5ae4fafe001ea620f43485979d98cb334f6b9\"}},{\"tableId\":\"f502ecad-34b2-493f-976d-502910105d7a1759147182466\",\"rowIndex\":3,\"colIndex\":4,\"originalValue\":175,\"documentId\":\"Amit bhai POS\",\"fullRow\":{\"_id\":\"68da74c4d59477d0df0bd2b9\",\"transactionId\":\"POS003\",\"date\":\"2025-09-22\",\"description\":\"Sale - Item C\",\"amount\":175,\"status\":\"Completed\",\"sourceType\":\"document\",\"sourceId\":\"281f211144b67353751aaf8c98f5ae4fafe001ea620f43485979d98cb334f6b9\"}},{\"tableId\":\"f502ecad-34b2-493f-976d-502910105d7a1759147182466\",\"rowIndex\":4,\"colIndex\":4,\"originalValue\":\"50\",\"documentId\":\"Amit bhai POS\",\"fullRow\":{\"_id\":\"68da74c4d59477d0df0bd2b7\",\"transactionId\":\"POS001\",\"date\":\"2025-09-20T00:00:00.000Z\",\"description\":\"Sale - Item A\",\"amount\":\"100\",\"status\":\"Completed\",\"sourceType\":\"document\",\"sourceId\":\"281f211144b67353751aaf8c98f5ae4fafe001ea620f43485979d98cb334f6b9\"},\"updated\":true}]},{\"value\":975,\"matchType\":\"aggregated\",\"sources\":[{\"tableId\":\"e47ef56c-c4aa-49f1-bcac-5b88310d4a731759147275231\",\"rowIndex\":0,\"colIndex\":4,\"originalValue\":250,\"documentId\":\"Amit bhai bank statement\",\"fullRow\":{\"_id\":\"68da7535d59477d0df0bd334\",\"transactionId\":\"POS002\",\"date\":\"2025-09-21\",\"description\":\"Credit - Sale Item B\",\"amount\":250,\"status\":\"Settled\",\"sourceType\":\"document\",\"sourceId\":\"9afa060fd2b4267fbc6982209c07037399e62dbcd41a41c65a314cd09476968d\"}},{\"tableId\":\"e47ef56c-c4aa-49f1-bcac-5b88310d4a731759147275231\",\"rowIndex\":1,\"colIndex\":4,\"originalValue\":150,\"documentId\":\"Amit bhai bank statement\",\"fullRow\":{\"_id\":\"68da7535d59477d0df0bd337\",\"transactionId\":\"POS005\",\"date\":\"2025-09-24\",\"description\":\"Credit - Sale Item E\",\"amount\":150,\"status\":\"Settled\",\"sourceType\":\"document\",\"sourceId\":\"9afa060fd2b4267fbc6982209c07037399e62dbcd41a41c65a314cd09476968d\"}},{\"tableId\":\"e47ef56c-c4aa-49f1-bcac-5b88310d4a731759147275231\",\"rowIndex\":2,\"colIndex\":4,\"originalValue\":300,\"documentId\":\"Amit bhai bank statement\",\"fullRow\":{\"_id\":\"68da7535d59477d0df0bd336\",\"transactionId\":\"POS004\",\"date\":\"2025-09-23\",\"description\":\"Credit - Sale Item D\",\"amount\":300,\"status\":\"Settled\",\"sourceType\":\"document\",\"sourceId\":\"9afa060fd2b4267fbc6982209c07037399e62dbcd41a41c65a314cd09476968d\"}},{\"tableId\":\"e47ef56c-c4aa-49f1-bcac-5b88310d4a731759147275231\",\"rowIndex\":3,\"colIndex\":4,\"originalValue\":100,\"documentId\":\"Amit bhai bank statement\",\"fullRow\":{\"_id\":\"68da7535d59477d0df0bd333\",\"transactionId\":\"POS001\",\"date\":\"2025-09-20\",\"description\":\"Credit - Sale Item A\",\"amount\":100,\"status\":\"Settled\",\"sourceType\":\"document\",\"sourceId\":\"9afa060fd2b4267fbc6982209c07037399e62dbcd41a41c65a314cd09476968d\"}},{\"tableId\":\"e47ef56c-c4aa-49f1-bcac-5b88310d4a731759147275231\",\"rowIndex\":4,\"colIndex\":4,\"originalValue\":175,\"documentId\":\"Amit bhai bank statement\",\"fullRow\":{\"_id\":\"68da7535d59477d0df0bd335\",\"transactionId\":\"POS003\",\"date\":\"2025-09-22\",\"description\":\"Credit - Sale Item C\",\"amount\":175,\"status\":\"Settled\",\"sourceType\":\"document\",\"sourceId\":\"9afa060fd2b4267fbc6982209c07037399e62dbcd41a41c65a314cd09476968d\"}}]}]",
+    "comment": "100 kia hai boss<br><b>yeh bold hai<br><br><u>underline</u></b>",
+    "link": "https://app.clofast.com",
+    "organizationId": {
+      "$oid": "68ce432efd231588ca748b3d"
+    },
+    "createdAt": {
+      "$date": "2025-10-03T09:44:25.465Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-03T09:45:27.846Z"
+    },
+    "__v": 0,
+    "document": {
+      "s3Url": "https://clofast-docs.s3.ap-south-1.amazonaws.com/POSStatementpdfpdf_17594846650682233.pdf",
+      "url": "https://api.clofast.com/discrepancy/document/get?resolutionId=68df9af9688adbb7d52e55e5",
+      "name": "POSStatementpdf.pdf"
+    }
+  },
+
+  "ticket": {
+    "_id": {
+      "$oid": "68dcccede8e04f43f5922358"
+    },
+    "name": "Boss Discripancy",
+    "instruction": "you have to take all of the instructions and go on creating the ticket",
+    "status": "Progress",
+    "risk": "High",
+    "discrepancyId": {
+      "$oid": "68dccc57e8e04f43f59222f2"
+    },
+    "profileId": {
+      "$oid": "68d04dd9cf2461ba74bee142"
+    },
+    "workspaceId": {
+      "$oid": "68ce51888d0bd65f99b9ff71"
+    },
+    "organizationId": {
+      "$oid": "68ce4b018d0bd65f99b9ff1b"
+    },
+    "expiresAt": {
+      "$date": "2025-10-02T00:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-01T06:40:45.486Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-06T08:34:54.923Z"
+    },
+    "__v": 0
+  }
+}
