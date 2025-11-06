@@ -510,6 +510,7 @@ async def generate_chart(request: QueryRequest):
     Returns:
         Complete response with data, visualization, and metadata
     """
+    print(f"Received query: {request.prompt} (Collection: {request.collection})")
     try:
         # Check if data exists
         collections = mongo_connector.list_collections()
@@ -527,7 +528,12 @@ async def generate_chart(request: QueryRequest):
             )
         
         # Process query through orchestration agent
-        result = orchestration_agent.process_query(request.prompt, request.collection)
+        # Pass collection as keyword argument
+        result = orchestration_agent.process_query(
+            query=request.prompt,
+            collection=request.collection
+        )
+        
         
         return QueryResponse(**result)
     

@@ -145,7 +145,7 @@ class OrchestrationAgent:
         
         return state
     
-    def process_query(self, query: str, collection: str = None) -> Dict[str, Any]:
+    def process_query(self, query: str, collection: Optional[str] = None) -> Dict[str, Any]:
         """
         Process a natural language query through the entire pipeline
         

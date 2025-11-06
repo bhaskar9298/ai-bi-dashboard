@@ -1,103 +1,103 @@
-# 🔧 Quick Fix Applied
+# 🔥 QUICK FIX GUIDE
 
-## Issue
-Import error: `cannot import name 'MongoConnector'`
-
-## Root Cause
-The class was renamed to `ReconciliationMongoConnector` but `__init__.py` was still trying to import `MongoConnector`.
-
-## Fixes Applied
-
-### 1. Updated `utils/__init__.py`
-```python
-# Added backward compatibility alias
-from .mongo_connector import mongo_connector, ReconciliationMongoConnector
-
-MongoConnector = ReconciliationMongoConnector
-
-__all__ = ['mongo_connector', 'MongoConnector', 'ReconciliationMongoConnector']
+## The Problem
+```
+❌ OrchestrationAgent.process_query() takes 2 positional arguments but 3 were given
 ```
 
-### 2. Added `serialize_document` as static method
-```python
-class ReconciliationMongoConnector:
-    @staticmethod
-    def serialize_document(doc: Dict[str, Any]) -> Dict[str, Any]:
-        """Static method wrapper for serialize_document function"""
-        return serialize_document(doc)
+## The Solution (3 Steps)
+
+### 1️⃣ Run the One-Click Fix
+```cmd
+cd C:\Users\Lenovo\Desktop\ai-bi-dashboard\backend
+python one_click_fix.py
 ```
 
-### 3. Fixed `test_reconciliation_ingestion.py`
-- Fixed JSON file path from `parent / "utils"` to `backend_path / "utils"`
-- Added better error messages
-- Added file existence checks
+This automatically:
+- ✅ Kills running Python processes
+- ✅ Deletes all Python cache files
+- ✅ Verifies the code fix is in place
+- ✅ Runs diagnostic tests
+- ✅ Optionally starts your server
 
-### 4. Added `Dict` import to `app.py`
-```python
-from typing import Optional, List, Dict
-```
-
-### 5. Created `test_connection.py`
-- Simple connection and import test
-- Helps debug issues step by step
-
-## Files Modified
-- ✅ `utils/__init__.py` - Backward compatibility
-- ✅ `utils/mongo_connector.py` - Static method added
-- ✅ `test_reconciliation_ingestion.py` - Path fixed
-- ✅ `app.py` - Import fixed
-- ✅ `test_connection.py` - Created
-
-## Test Now
-
-```bash
-# Step 1: Test basic connection
-cd backend
-python test_connection.py
-
-# Step 2: Test full ingestion
-python test_reconciliation_ingestion.py
-
-# Step 3: Start backend
+### 2️⃣ Start Your Server (if not auto-started)
+```cmd
 python app.py
 ```
 
-## Expected Output
-
-### test_connection.py
-```
-Testing imports...
-✅ mongo_connector imported
-✅ reconciliation_flow_ingester imported
-✅ .env loaded
-
-Testing MongoDB connection...
-✅ MongoDB connected
-   Database: reconciliation_system
-   Collections: X
-
-Testing file path...
-   Looking for: C:\...\backend\utils\Reconciliation Data Flow.json
-   Exists: True/False
-
-✅ All basic tests passed!
+### 3️⃣ Test It Works
+```cmd
+curl -X POST http://localhost:8000/generate_chart ^
+  -H "Content-Type: application/json" ^
+  -d "{\"prompt\":\"Show analysis of american express reconciliation\"}"
 ```
 
-### test_reconciliation_ingestion.py
-```
-Testing Reconciliation Flow Ingestion
-✅ File read successfully
-🔄 Starting ingestion...
-✅ Ingestion successful!
+---
 
-📊 Collections Processed:
-  • matchmethod: 1 documents
-  • matchingrules: 2 documents
-  ...
+## ⚡ Even Faster (One Command)
 
-✅ Verification complete!
+Just run this and press 'y' when asked:
+```cmd
+python one_click_fix.py
 ```
 
-## Status
-✅ All fixes applied
-✅ Ready for testing
+---
+
+## 🎯 What Gets Fixed
+
+**Before (broken):**
+```python
+orchestration_agent.process_query(request.prompt, collection=request.collection)
+```
+
+**After (working):**
+```python
+orchestration_agent.process_query(
+    query=request.prompt,
+    collection=request.collection
+)
+```
+
+---
+
+## ✅ Success Indicators
+
+You'll know it worked when:
+
+1. **No errors in the curl response**
+2. **You see this in server logs:**
+   ```
+   🚀 Processing Query: 'Show analysis of american express reconciliation'
+   📋 Step 1: Fetching collection schema...
+   ✅ Schema fetched
+   ```
+3. **Response includes data and chart_config**
+
+---
+
+## 🆘 If Still Broken
+
+Run this command sequence:
+```cmd
+taskkill /F /IM python.exe
+timeout /t 3
+python one_click_fix.py
+```
+
+Or check the full guide: `URGENT_FIX_README.md`
+
+---
+
+## 📋 Script Reference
+
+| Script | Purpose |
+|--------|---------|
+| `one_click_fix.py` | ⭐ Run this first - does everything |
+| `force_clean_restart.py` | Cleans cache only |
+| `diagnostic_check.py` | Shows method signature |
+| `test_fix.py` | Tests if fix works |
+| `complete_fix.bat` | Windows batch version |
+
+---
+
+**The golden rule:** Always run `one_click_fix.py` after code changes! 🚀
