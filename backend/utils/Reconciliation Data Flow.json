@@ -942,7 +942,7 @@
                   "_id": {
                     "$oid": "68dee47483106149bead7bba"
                   },
-                  "date": "11/14/2024",
+                  "date": " ",
                   "vendorType": "AMERICAN EXPRESS",
                   "amount": "86.03",
                   "sourceType": "document",

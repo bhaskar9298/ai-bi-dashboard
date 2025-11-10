@@ -51,42 +51,117 @@ class QueryAgent:
             raise ValueError(f"Unsupported LLM provider: {provider}")
     
     def _create_prompt_template(self) -> PromptTemplate:
-        """Create the prompt template for query generation"""
-        template = """You are an expert MongoDB query generator. Convert natural language questions into MongoDB aggregation pipelines.
+            """Create the prompt template for query generation"""
+            template = """You are an expert MongoDB query generator specializing in financial reconciliation systems. Convert natural language questions into MongoDB aggregation pipelines.
 
-COLLECTION SCHEMA:
-{schema}
+        COLLECTION SCHEMA:
+        {schema}
 
-SAMPLE DOCUMENT:
-{sample_doc}
+        SAMPLE DOCUMENT:
+        {sample_doc}
 
-USER QUESTION: {query}
+        USER QUESTION: {query}
 
-INSTRUCTIONS:
-1. Analyze the question and determine what data is needed
-2. Generate a MongoDB aggregation pipeline as a JSON array
-3. Use appropriate stages: $match, $group, $project, $sort, $limit
-4. Return ONLY the JSON array, no explanations
-5. Ensure field names match the schema exactly
-6. For aggregations, use operators like $sum, $avg, $max, $min
-7. For date operations, use $dateToString or date operators
+        RECONCILIATION SYSTEM CONTEXT:
+        This is a financial reconciliation system with the following data flow:
+        1. matchmethod - Main reconciliation configuration
+        2. matchingrules - Rules for matching (e.g., "American Express", "Mastercard")
+        3. datasources - Source data collections (POS data, Credit Card statements)
+        4. matchingResult - Results of reconciliation matching with nested cell data
+        5. discrepancies - Identified mismatches with severity levels (high, medium, low)
+        6. discrepancyResolution - Resolution records with status (Approved, Rejected, Pending)
+        7. ticket - Issue tracking with risk levels (High, Medium, Low) and status (Progress, Resolved, Closed)
 
-EXAMPLE QUERIES:
-- "show total sales by category" → [
-    {{"$group": {{"_id": "$category", "total": {{"$sum": "$amount"}}}}}},
-    {{"$sort": {{"total": -1}}}}
-  ]
-- "average price per region" → [
-    {{"$group": {{"_id": "$region", "avg_price": {{"$avg": "$price"}}}}}},
-    {{"$sort": {{"avg_price": -1}}}}
-  ]
+        CRITICAL FIELD PATTERNS:
+        - IDs: Use ObjectId references (_id, profileId, matchingMethodId, workspaceId, organizationId)
+        - Amounts: Numeric fields in "amount" columns across collections
+        - Dates: ISO date format in createdAt, updatedAt, resolvedAt, expiresAt
+        - Status: String enums (Completed, Settled, Approved, Progress, etc.)
+        - Vendor Types: "American Express", "Mastercard", "AMERICAN EXPRESS" (case-insensitive)
+        - Nested Data: matchingResult contains deeply nested "cells" and "sources" arrays
 
-GENERATE THE PIPELINE (JSON array only):"""
+        INSTRUCTIONS:
+        1. Analyze the question and identify which collections are needed
+        2. For reconciliation queries, consider joining multiple collections using $lookup
+        3. Generate a MongoDB aggregation pipeline as a JSON array
+        4. Use appropriate stages: $match, $group, $project, $sort, $limit, $lookup, $unwind
+        5. Return ONLY the JSON array, no explanations or markdown
+        6. Ensure field names match the schema exactly (case-sensitive)
+        7. For aggregations, use operators: $sum, $avg, $max, $min, $count
+        8. For date operations, use $dateToString, $dateFromString, or date operators
+        9. For array operations in matchingResult, use $unwind and $arrayElemAt
+        10. For discrepancy analysis, filter by severity or type fields
 
-        return PromptTemplate(
-            input_variables=["schema", "sample_doc", "query"],
-            template=template
-        )
+        RECONCILIATION-SPECIFIC EXAMPLES:
+
+        - "Show total discrepancies by severity" → [
+            {{"$match": {{"severity": {{"$exists": true}}}}}},
+            {{"$group": {{"_id": "$severity", "count": {{"$sum": 1}}}}}},
+            {{"$sort": {{"count": -1}}}}
+        ]
+
+        - "List American Express transactions with amounts" → [
+            {{"$match": {{"vendorType": {{"$regex": "american express", "$options": "i"}}}}}},
+            {{"$project": {{"date": 1, "amount": 1, "vendorType": 1}}}},
+            {{"$sort": {{"date": -1}}}}
+        ]
+
+        - "Show matching results with their discrepancies" → [
+            {{"$lookup": {{
+            "from": "discrepancies",
+            "localField": "_id",
+            "foreignField": "matchResultsId",
+            "as": "discrepancies"
+            }}}},
+            {{"$match": {{"discrepancies": {{"$ne": []}}}}}},
+            {{"$project": {{"matchId": 1, "discrepancies.severity": 1, "discrepancies.type": 1}}}}
+        ]
+
+        - "Count tickets by status and risk" → [
+            {{"$group": {{
+            "_id": {{"status": "$status", "risk": "$risk"}},
+            "count": {{"$sum": 1}}
+            }}}},
+            {{"$sort": {{"count": -1}}}}
+        ]
+
+        - "Total amount reconciled per vendor type" → [
+            {{"$lookup": {{
+            "from": "matchingResult",
+            "localField": "_id",
+            "foreignField": "matchingMethodId",
+            "as": "results"
+            }}}},
+            {{"$unwind": "$results"}},
+            {{"$unwind": "$results.rows"}},
+            {{"$unwind": "$results.rows.cells"}},
+            {{"$group": {{
+            "_id": "$ruleName",
+            "totalAmount": {{"$sum": "$results.rows.cells.value"}}
+            }}}},
+            {{"$sort": {{"totalAmount": -1}}}}
+        ]
+
+        - "Find unresolved high severity discrepancies" → [
+            {{"$match": {{
+            "severity": "high"
+            }}}},
+            {{"$lookup": {{
+            "from": "discrepancyResolution",
+            "localField": "_id",
+            "foreignField": "discrepancyId",
+            "as": "resolution"
+            }}}},
+            {{"$match": {{"resolution": []}}}},
+            {{"$project": {{"type": 1, "details": 1, "severity": 1, "createdAt": 1}}}}
+        ]
+
+        GENERATE THE PIPELINE (JSON array only):"""
+
+            return PromptTemplate(
+                input_variables=["schema", "sample_doc", "query"],
+                template=template
+            )
     
     def generate_pipeline(self, query: str, schema: Dict[str, Any]) -> Dict[str, Any]:
         """

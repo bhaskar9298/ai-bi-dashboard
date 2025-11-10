@@ -91,8 +91,7 @@ GENERATE THE JSON RESPONSE:"""
         return PromptTemplate(
             input_variables=["query", "data_preview", "row_count", "columns"],
             template=template
-        )
-    
+        )    
     def generate_chart_config(self, data: List[Dict[str, Any]], query: str) -> Dict[str, Any]:
         """
         Generate chart configuration based on data and query
